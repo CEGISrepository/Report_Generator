@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            color: #016796;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #016796;
+        }
+
+        input[type="file"], textarea, select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        input[type="number"], input[type="color"] {
+            width: 100px;
+        }
+
+        input[type="submit"] {
+            background-color: #016796;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #014c73;
+        }
+
+        .chart-details {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .chart-details h3 {
+            color: #61a673;
+            margin-top: 0;
+        }
+    </style>
+    <!-- Include Papa Parse library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload CSV Files</h1>
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+            <label for="data_file">Data File:</label>
+            <input type="file" name="data_file" id="data_file" accept=".csv" required>
+
+            <label for="phone_numbers_file">Phone Numbers File:</label>
+            <input type="file" name="phone_numbers_file" id="phone_numbers_file" accept=".csv" required>
+
+            <label for="report_text">Report Text:</label>
+            <textarea name="report_text" id="report_text" rows="3" placeholder="Enter some text to be displayed after the report title"></textarea>
+
+            <label for="num_charts">Number of Charts:</label>
+            <input type="number" name="num_charts" id="num_charts" min="1" required>
+
+            <div class="chart-details">
+                <div id="chart-details"></div>
+            </div>
+
+            <input type="submit" value="Analyze">
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const numCharts = document.getElementById('num_charts');
+            const chartDetails = document.getElementById('chart-details');
+            let columnNames = [];
+
+            const dataFileInput = document.getElementById('data_file');
+            dataFileInput.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const result = reader.result;
+                        const data = Papa.parse(result, { header: true }).data;
+                        columnNames = Object.keys(data[0]);
+                        console.log("Column Names:", columnNames); // Log the column names
+                        updateChartDetails(); // Call function to update chart details if number of charts is already specified
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            numCharts.addEventListener('input', updateChartDetails);
+
+            function updateChartDetails() {
+                const count = parseInt(numCharts.value) || 0;
+                let html = '';
+                console.log("Updating chart details for", count, "charts."); // Log the number of charts
+
+                for (let i = 1; i <= count; i++) {
+                    html += `
+                    <div>
+                        <h3>Chart ${i}</h3>
+                        <label for="x_column_${i}">X Column:</label>
+                        <select name="x_column_${i}" id="x_column_${i}" required>
+                            ${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+                        </select><br><br>
+                        <label for="y_column_${i}">Y Column:</label>
+                        <select name="y_column_${i}" id="y_column_${i}" required>
+                            ${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+                        </select><br><br>
+                        <label for="chart_type_${i}">Chart Type:</label>
+                        <select name="chart_type_${i}" id="chart_type_${i}" required>
+                            <option value="bar">Bar</option>
+                            <option value="line">Line</option>
+                            <option value="pie">Pie</option>
+                        </select><br><br>
+                        <label for="chart_title_${i}">Chart Title:</label>
+                        <input type="text" name="chart_title_${i}" id="chart_title_${i}" required><br><br>
+                        <label for="x_label_${i}">X-axis Label:</label>
+                        <input type="text" name="x_label_${i}" id="x_label_${i}"><br><br>
+                        <label for="y_label_${i}">Y-axis Label:</label>
+                        <input type="text" name="y_label_${i}" id="y_label_${i}"><br><br>
+                        <label for="description_${i}">Description:</label>
+                        <textarea name="description_${i}" id="description_${i}" rows="3"></textarea><br><br>
+                        <label for="threshold_${i}">Threshold Value:</label>
+                        <input type="number" name="threshold_${i}" id="threshold_${i}"><br><br>
+                        <label for="chart_color_${i}">Chart Color:</label>
+                        <input type="color" name="chart_color_${i}" id="chart_color_${i}" value="#61a673"><br><br>
+						<h4>Filters:</h4>
+                        <div id="filters_${i}"></div>
+                        <button type="button" onclick="addFilter(${i})">Add Filter</button><br><br>
+                    </div>
+                    `;
+                }
+
+                chartDetails.innerHTML = html;
+            }
+			window.addFilter = function (chartIndex) {
+                const filterContainer = document.getElementById(`filters_${chartIndex}`);
+                const filterCount = filterContainer.childElementCount / 7 + 1;
+
+                let filterHtml = `
+                    <label for="filter_action_${chartIndex}_${filterCount}">Action:</label>
+                    <select name="filter_action_${chartIndex}_${filterCount}" id="filter_action_${chartIndex}_${filterCount}">
+                        <option value="keep">Keep</option>
+                        <option value="drop">Drop</option>
+                    </select><br>
+                    <label for="filter_column_${chartIndex}_${filterCount}">Column:</label>
+                    <select name="filter_column_${chartIndex}_${filterCount}" id="filter_column_${chartIndex}_${filterCount}">
+                        ${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+                    </select><br>
+                    <label for="filter_type_${chartIndex}_${filterCount}">Type:</label>
+                    <select name="filter_type_${chartIndex}_${filterCount}" id="filter_type_${chartIndex}_${filterCount}" onchange="updateFilterType(${chartIndex}, ${filterCount})">
+                        <option value="range">Range</option>
+                        <option value="text">Text</option>
+                    </select><br>
+                    <div id="filter_values_${chartIndex}_${filterCount}">
+                        <label for="filter_min_${chartIndex}_${filterCount}">Min Value:</label>
+                        <input type="number" name="filter_min_${chartIndex}_${filterCount}" id="filter_min_${chartIndex}_${filterCount}"><br>
+                        <label for="filter_max_${chartIndex}_${filterCount}">Max Value:</label>
+                        <input type="number" name="filter_max_${chartIndex}_${filterCount}" id="filter_max_${chartIndex}_${filterCount}"><br>
+                    </div><br>
+                `;
+
+                filterContainer.innerHTML += filterHtml;
+            }
+
+            window.updateFilterType = function (chartIndex, filterCount) {
+                const filterType = document.getElementById(`filter_type_${chartIndex}_${filterCount}`).value;
+                const filterValues = document.getElementById(`filter_values_${chartIndex}_${filterCount}`);
+
+                if (filterType === 'range') {
+                    filterValues.innerHTML = `
+                        <label for="filter_min_${chartIndex}_${filterCount}">Min Value:</label>
+                        <input type="number" name="filter_min_${chartIndex}_${filterCount}" id="filter_min_${chartIndex}_${filterCount}"><br>
+                        <label for="filter_max_${chartIndex}_${filterCount}">Max Value:</label>
+                        <input type="number" name="filter_max_${chartIndex}_${filterCount}" id="filter_max_${chartIndex}_${filterCount}"><br>
+                    `;
+                } else if (filterType === 'text') {
+                    filterValues.innerHTML = `
+                        <label for="filter_text_${chartIndex}_${filterCount}">Text Value:</label>
+                        <input type="text" name="filter_text_${chartIndex}_${filterCount}" id="filter_text_${chartIndex}_${filterCount}"><br>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

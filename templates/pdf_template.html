@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ district }}_report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        h1 {
+            color: #016796;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        h3 {
+            color: #61a673;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: auto;
+        }
+        .description {
+            word-wrap: break-word;
+            max-width: 35%;
+        }
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .chart-container img {
+            max-width: 30%;
+            height: auto;
+        }
+        .report-text {
+            text-align: left;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .report-text textarea {
+            width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <img src="Logo.png" alt="Logo" class="logo">
+    <h1>{{ district }} Report</h1>
+    <div class="report-text">
+        <textarea id="report-text" rows="3" placeholder="Enter some text to be displayed after the report title" readonly>{{ report_text }}</textarea>
+    </div>
+    {% for chart_info in chart_infos %}
+        {% if loop.index0 % 2 == 0 %}
+            <div style="display: flex; justify-content: space-between;">
+        {% endif %}
+        <div class="chart-container">
+            <h3>{{ chart_info.chart_title }}</h3>
+            <img src="{{ 'charts/' + chart_info.filename }}" alt="chart">
+            <div class="description">
+                <p>Description: {{ chart_info.description|replace('{{ min_' + chart_info.y_column + ' }}', chart_info['min_' + chart_info.y_column]|string)
+                                                         |replace('{{ max_' + chart_info.y_column + ' }}', chart_info['max_' + chart_info.y_column]|string)
+                                                         |replace('{{ avg_' + chart_info.y_column + ' }}', chart_info['avg_' + chart_info.y_column]|string)
+                                                         |replace('{{ mode_' + chart_info.y_column + ' }}', chart_info['mode_' + chart_info.y_column]|string) }}</p>
+            </div>
+        </div>
+        {% if loop.index0 % 2 == 1 or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
