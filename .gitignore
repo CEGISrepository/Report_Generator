@@ -1,3 +1,4 @@
+main/
 credentials.json
 git rm --cached credentials.json
 
