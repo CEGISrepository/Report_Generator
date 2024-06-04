@@ -27,16 +27,16 @@ app.secret_key = secrets.token_hex(16)  # Generate a secure secret key
 app.static_folder = 'static'  # Set the static folder
 
 # Twilio configuration
-account_sid = ' '
-auth_token = ' '
-twilio_phone_number = '+ '
+account_sid = 'ACCOUNT_SID'
+auth_token = 'AUTH_TOKEN'
+twilio_phone_number = 'TWILIO_PHONE_NUMBER'
 client = Client(account_sid, auth_token)
 
 
 
 # Google Drive API configuration
 creds = Credentials.from_authorized_user_file('credentials.json', ['https://www.googleapis.com/auth/drive'])
-drive_service = build('drive', 'v3', credentials=creds)
+drive_service = build ('drive', 'v3', credentials=creds)
 
 
 mpl.rcParams['font.family'] = 'sans-serif'
