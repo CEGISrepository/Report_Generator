@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFM Report Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #016796;
+            text-align: center;
+        }
+        .instructions {
+            margin-bottom: 20px;
+        }
+        .button {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            background-color: #016796;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instructions</h1>
+    <div class="instructions">
+        <ol>  
+            {% for point in instructions_points %}
+                <li>{{ point }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+    <a href="/index" class="button">Proceed</a>
+</body>
+</html>

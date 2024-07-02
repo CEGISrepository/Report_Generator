@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Upload Files</title>
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+			body {
+				font-family: 'Montserrat', sans-serif;
+				background-color: #f5f5f5;
+				color: #333;
+			}
+
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 20px;
+				background-color: #fff;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				border-radius: 5px;
+			}
+
+			h1 {
+				color: #016796;
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 10px;
+				font-weight: bold;
+				color: #016796;
+			}
+
+			input[type="file"], textarea, select {
+				display: block;
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-sizing: border-box;
+				margin-bottom: 20px;
+				font-size: 16px;
+			}
+
+			input[type="number"], input[type="color"] {
+				width: 100px;
+			}
+
+			input[type="submit"] {
+				background-color: #016796;
+				color: #fff;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 16px;
+			}
+
+			input[type="submit"]:hover {
+				background-color: #014c73;
+			}
+
+			.chart-details {
+				margin-top: 30px;
+				padding: 20px;
+				background-color: #f9f9f9;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+
+			.chart-details h3 {
+				color: #61a673;
+				margin-top: 0;
+			}
+			.template-link {
+                font-size: 10px; 
+            }				
+ 
+		</style>
+		<!-- Include Papa Parse library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Upload CSV Files</h1>
+			<form action="/analyze" method="post" enctype="multipart/form-data">
+				<label for="data_file">Data File:</label>
+				<input type="file" name="data_file" id="data_file" accept=".csv" required>
+				<a class="template-link" href="https://docs.google.com/spreadsheets/d/1ZbSgh_nS_y9oXnkMV_spyYI5XIoQncqUcXIoFu3Movs/edit?gid=0#gid=0?format=csv" target="_blank">Download Data Sample CSV</a>
+
+
+				<label for="phone_numbers_file">Phone Numbers File:</label>
+				<input type="file" name="phone_numbers_file" id="phone_numbers_file" accept=".csv" required>
+				<a class="template-link" href="https://docs.google.com/spreadsheets/d/1EjrFlE4pCnPKmAh6BSUjUlAHsbvcVGa3BWZ9Ky8y6Dw/edit?gid=0#gid=0?format=csv" target="_blank">Download Phone Numbers Sample CSV</a>
+				
+				<!-- Add this code after the file upload inputs in index.html -->
+				<label for="analysis_level">Perform analysis by:</label>
+				<select name="analysis_level" id="analysis_level" required>
+					<option value="District">District</option>
+					<option value="SubDistrict">Sub District</option>
+				</select>
+				
+				<label for="report_title">Report Title:</label>
+                <input type="text" name="report_title" id="report_title" required>
+
+
+				<label for="report_text">Report Text:</label>
+				<textarea name="report_text" id="report_text" rows="3" placeholder="Enter some text to be displayed after the report title"></textarea>
+
+
+				<div class="chart-details">
+					<div id="chart-details"></div>
+				</div>
+				<button type="button" onclick="addChart()">Add Chart</button>
+                <input type="number" name="num_charts" value="1">
+				<div id="preset-controls">
+					<input type="text" id="preset-name" name="preset_name" placeholder="Enter preset name">
+					<button type="button" onclick="savePreset()">Save Preset</button>
+					
+					<select id="load-preset" onchange="loadPreset(this.value)">
+						<option value="">Load Preset</option>
+					</select>
+				</div>
+
+				<script>
+				function savePreset() {
+					const presetName = document.getElementById('preset-name').value;
+					if (!presetName) {
+						alert('Please enter a preset name');
+						return;
+					}
+
+					const formData = new FormData(document.querySelector('form'));
+					formData.append('preset_name', presetName);
+
+					fetch('/save_preset', {
+						method: 'POST',
+						body: formData
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.status === 'success') {
+							alert('Preset saved successfully');
+							loadPresetList(); // Call loadPresetList() here
+						} else {
+							alert('Error saving preset');
+						}
+					});
+				}
+
+				function loadPreset(presetName) {
+					if (!presetName) return;
+
+					fetch(`/load_preset/${presetName}`)
+					.then(response => response.json())
+					.then(data => {
+						if (data.status === 'success') {
+							// Populate form fields with loaded data
+							Object.keys(data.preset).forEach(key => {
+								const element = document.getElementsByName(key)[0];
+								if (element) {
+									element.value = data.preset[key];
+								}
+							});
+
+							// You may need to write additional code here to handle more complex form elements like dynamically added charts
+							alert('Preset loaded successfully');
+						} else {
+							alert('Error loading preset');
+						}
+					});
+				}
+
+				function loadPresetList() {
+					fetch('/get_presets')
+					.then(response => response.json())
+					.then(data => {
+						const select = document.getElementById('load-preset');
+						select.innerHTML = '<option value="">Load Preset</option>';
+						data.presets.forEach(preset => {
+							const option = document.createElement('option');
+							option.value = preset;
+							option.textContent = preset;
+							select.appendChild(option);
+						});
+					});
+				}
+
+				// Load preset list when the page loads
+				document.addEventListener('DOMContentLoaded', loadPresetList);
+				</script>
+				
+				<button type="submit" name="action" value="preview">Preview Report</button>
+				
+				<button type="submit" name="action" value="save">Save to Drive</button>
+
+				<!-- Button for sending the link via SMS -->
+				<button type="submit" name="action" value="send_sms">Send Link via SMS</button>
+			</form>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				//const numCharts = document.getElementById('num_charts');
+				const chartDetails = document.getElementById('chart-details');
+				let columnNames = [];
+				let chartCount = 0;
+
+				const dataFileInput = document.getElementById('data_file');
+				const addChartButton = document.querySelector('button[onclick="addChart()"]');
+				dataFileInput.addEventListener('change', function () {
+					const file = this.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const result = e.target.result;
+							const data = Papa.parse(result, { header: true }).data;
+							columnNames = Object.keys(data[0]);
+							console.log("Column Names:", columnNames); // Log the column names
+							addChart(); // Call function to update chart details if number of charts is already specified
+						};
+						reader.readAsText(file);
+					}
+				});
+
+				addChartButton.addEventListener('click', addChart);
+
+
+			  
+				function addChart() {
+					chartCount++;
+
+					let html = `
+						<div id="chart-${chartCount}"> 
+							<h3>Chart ${chartCount}</h3>
+
+							<label for="x_column_${chartCount}">X Column:</label>
+							<select name="x_column_${chartCount}" id="x_column_${chartCount}" required>
+								${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+							</select>
+
+							<label for="y_column_${chartCount}">Y Column:</label>
+							<select name="y_column_${chartCount}" id="y_column_${chartCount}" required>
+								${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+							</select>
+
+							<label for="chart_type_${chartCount}">Chart Type:</label>
+							<select name="chart_type_${chartCount}" id="chart_type_${chartCount}" required>
+								<option value="bar">Bar</option>
+								<option value="line">Line</option>
+								<option value="pie">Pie</option>
+								<option value="scatter">Scatter</option>  
+							</select>
+
+							<label for="chart_title_${chartCount}">Chart Title:</label>
+							<input type="text" name="chart_title_${chartCount}" id="chart_title_${chartCount}" required>
+
+							<label for="x_label_${chartCount}">X-axis Label:</label>
+							<input type="text" name="x_label_${chartCount}" id="x_label_${chartCount}">
+
+							<label for="y_label_${chartCount}">Y-axis Label:</label>
+							<input type="text" name="y_label_${chartCount}" id="y_label_${chartCount}">
+
+							<label for="description_${chartCount}">Description:</label>
+							<textarea name="description_${chartCount}" id="description_${chartCount}" rows="3"></textarea>
+
+							<label for="threshold_${chartCount}">Threshold Value:</label>
+							<input type="number" name="threshold_${chartCount}" id="threshold_${chartCount}">
+
+							<label for="chart_color_${chartCount}">Chart Color:</label>
+							<input type="color" name="chart_color_${chartCount}" id="chart_color_${chartCount}" value="#61a673">
+
+							<label for="legend_label_${chartCount}">Legend Label:</label>
+							<input type="text" name="legend_label_${chartCount}" id="legend_label_${chartCount}">
+
+							<h4>Filters:</h4>
+							<div id="filters_${chartCount}"></div>
+							<button type="button" onclick="addFilter(${chartCount})">Add Filter</button>
+						</div>
+					`;
+
+					const newChartDiv = document.createElement('div');
+					newChartDiv.innerHTML = html;
+
+					// Add Remove Chart Button
+					const removeButton = document.createElement('button');
+					removeButton.textContent = 'Remove Chart';
+					removeButton.onclick = () => removeChart(newChartDiv);
+					newChartDiv.appendChild(removeButton); // Add remove button after the filters
+
+					chartDetails.appendChild(newChartDiv);
+				}
+
+				function removeChart(chartDiv) {
+					chartDiv.remove();
+					chartCount--; // Decrement the chart count when removing
+				}
+
+ 
+				window.addFilter = function (chartIndex) {
+					const filterContainer = document.getElementById(`filters_${chartIndex}`);
+					const filterCount = filterContainer.childElementCount / 7 + 1;
+
+					let filterHtml = `
+						<label for="filter_action_${chartIndex}_${filterCount}">Action:</label>
+						<select name="filter_action_${chartIndex}_${filterCount}" id="filter_action_${chartIndex}_${filterCount}">
+							<option value="keep">Keep</option>
+							<option value="drop">Drop</option>
+						</select><br>
+						<label for="filter_column_${chartIndex}_${filterCount}">Column:</label>
+						<select name="filter_column_${chartIndex}_${filterCount}" id="filter_column_${chartIndex}_${filterCount}">
+							${columnNames.map(col => `<option value="${col}">${col}</option>`).join('')}
+						</select><br>
+						<label for="filter_type_${chartIndex}_${filterCount}">Type:</label>
+						<select name="filter_type_${chartIndex}_${filterCount}" id="filter_type_${chartIndex}_${filterCount}" onchange="updateFilterType(${chartIndex}, ${filterCount})">
+							<option value="range">Range</option>
+							<option value="text">Text</option>
+						</select><br>
+						<div id="filter_values_${chartIndex}_${filterCount}">
+							<label for="filter_min_${chartIndex}_${filterCount}">Min Value:</label>
+							<input type="number" name="filter_min_${chartIndex}_${filterCount}" id="filter_min_${chartIndex}_${filterCount}"><br>
+							<label for="filter_max_${chartIndex}_${filterCount}">Max Value:</label>
+							<input type="number" name="filter_max_${chartIndex}_${filterCount}" id="filter_max_${chartIndex}_${filterCount}"><br>
+						</div><br>
+					`;
+
+					filterContainer.innerHTML += filterHtml;
+				}
+
+				window.updateFilterType = async function (chartIndex, filterCount) {
+					const filterType = document.getElementById(`filter_type_${chartIndex}_${filterCount}`).value;
+					const filterValues = document.getElementById(`filter_values_${chartIndex}_${filterCount}`);
+					const filterColumn = document.getElementById(`filter_column_${chartIndex}_${filterCount}`).value;
+
+
+					if (filterType === 'range') {
+						filterValues.innerHTML = `
+							<label for="filter_min_${chartIndex}_${filterCount}">Min Value:</label>
+							<input type="number" name="filter_min_${chartIndex}_${filterCount}" id="filter_min_${chartIndex}_${filterCount}"><br>
+							<label for="filter_max_${chartIndex}_${filterCount}">Max Value:</label>
+							<input type="number" name="filter_max_${chartIndex}_${filterCount}" id="filter_max_${chartIndex}_${filterCount}"><br>
+						`;
+					} else if (filterType === 'text') {
+					  try {
+							const uniqueValues = await getUniqueValues(filterColumn);
+							const optionsHTML = [];
+							optionsHTML.push(`<option value="">Select a value</option>`);
+
+							for (const value of uniqueValues) {
+								optionsHTML.push(`<option value="${value}">${value}</option>`);
+							}
+
+							filterValues.innerHTML = `
+								<label for="filter_text_${chartIndex}_${filterCount}">Text Value:</label>
+								<select name="filter_text_${chartIndex}_${filterCount}" id="filter_text_${chartIndex}_${filterCount}">
+									${optionsHTML.join('')}
+								</select>
+							`;
+						} catch (error) {
+							console.error('Error getting unique values:', error);
+						}
+					}
+				}
+				function getUniqueValues(columnName) {
+					return new Promise((resolve, reject) => {
+						const file = document.getElementById('data_file').files[0];
+						if (file) {
+							const reader = new FileReader();
+							reader.onload = function (e) {
+								const result = e.target.result;
+								const data = Papa.parse(result, { header: true }).data;
+								const uniqueValues = new Set(data.map(row => row[columnName]));
+								resolve(Array.from(uniqueValues));
+							};
+							reader.onerror = reject;
+							reader.readAsText(file);
+						} else {
+							resolve([]);
+						}
+					});
+				}
+						});
+		</script>
+	</body>
+	</html>

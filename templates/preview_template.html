@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Template</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        h1 {
+            color: #016796;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        h3 {
+            color: #61a673;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: auto;
+        }
+        .description {
+            word-wrap: break-word;
+            max-width: 35%;
+        }
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .chart-container img {
+            max-width: 30%;
+            height: auto;
+        }
+        .report-text {
+            text-align: left;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .report-text textarea {
+            width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <img src="Logo.png" alt="Logo" class="logo">
+    <h1>{{ report_title }}</h1>
+    <div class="report-text">
+        <p>{{ report_text }}</p>
+    </div>
+    {% for chart_info in chart_infos %}
+        <div class="chart-container">
+            <h3>{{ chart_info.chart_title }}</h3>
+            <img src="{{ chart_info.chart_data }}" alt="chart" style="max-width: 100%; height: auto;">
+
+            <div class="description">
+                <p>Description: {{ chart_info.description }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>
