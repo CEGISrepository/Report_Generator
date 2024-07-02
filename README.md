@@ -15,7 +15,7 @@
 ### Running the code on your local machine
 
 To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). Configure the Python interpreter on your IDE (refer to the installation guide of your corresponding IDE from the internet) . 
-Next, clone the Github repository and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. These are as follows: 
+Next, clone the Github repository onto your local system and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. These are as follows: 
 - Flask==2.3.2
 - pandas==1.5.3
 - matplotlib==3.7.1
@@ -33,7 +33,7 @@ To install it all in one go, you can enter this pre-written command into your ID
 ```bash
 pip install Flask pandas matplotlib xhtml2pdf twilio google-auth google-auth-oauthlib google-api-python-client requests pdfkit Jinja2
 ```
-Obtain the credentials file(it is not available on github repository) and place it in the same directory as main.py. And replace the twilio credentials in main.py with your credentials:
+Obtain the credentials file(it is not available on github repository due to security concerns) and place it in the same directory as main.py. And replace the twilio credentials in main.py with your credentials:
 ```bash
 account_sid = ' '
 auth_token = ' '
