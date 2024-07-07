@@ -20,10 +20,10 @@ Activate the environment:
 - Windows: `.venv\Scripts\activate`
 
 ```bash
-python3.11 -m venv .venv  # Create the virtual environment
+python3.11 -m venv .venv  # Create the virtual environment(if not using the .venv provided)
 source .venv/bin/activate  # Activate it (adjust for Windows if needed)
 ```
-Next, clone the Github repository onto your local system and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. These are as follows: 
+Next, clone the Github repository onto your local system and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. However these will be taken care of in the .venv folder in the repository. But, as a good practice and to ensure duplicability, the packages are as follows: 
 - Flask==2.3.2
 - pandas==1.5.3
 - matplotlib==3.7.1
