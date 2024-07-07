@@ -16,8 +16,8 @@
 
 To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). Configure the Python interpreter on your IDE (refer to the installation guide of your corresponding IDE from the internet) . Note : We have used Python 3.11 for this project. 
 Activate the environment: 
-- Linux/macOS: `bash  source .venv/bin/activate`
-- Windows: `bash .venv\Scripts\activate`
+- Linux/macOS: `source .venv/bin/activate`
+- Windows: `.venv\Scripts\activate`
 
 ```bash
 python3.11 -m venv .venv  # Create the virtual environment
