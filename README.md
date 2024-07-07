@@ -14,7 +14,15 @@
 
 ### Running the code on your local machine
 
-To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). Configure the Python interpreter on your IDE (refer to the installation guide of your corresponding IDE from the internet) . 
+To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). Configure the Python interpreter on your IDE (refer to the installation guide of your corresponding IDE from the internet) . Note : We have used Python 3.11 for this project. 
+Activate the environment: 
+- Linux/macOS: `bash  source .venv/bin/activate`
+- Windows: `bash .venv\Scripts\activate`
+
+```bash
+python3.11 -m venv .venv  # Create the virtual environment
+source .venv/bin/activate  # Activate it (adjust for Windows if needed)
+```
 Next, clone the Github repository onto your local system and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. These are as follows: 
 - Flask==2.3.2
 - pandas==1.5.3
