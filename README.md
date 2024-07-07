@@ -39,7 +39,7 @@ Next, clone the Github repository onto your local system and open the main.py co
 As an example, you can install these by typing 'pip install Flask==2.3.2' or just 'pip install Flask' into your Python IDE terminal. The latter will install the latest version of any package but in some cases, might not be compatible. 
 To install it all in one go, you can enter this pre-written command into your IDE terminal: 
 ```bash
-pip install Flask pandas matplotlib xhtml2pdf twilio google-auth google-auth-oauthlib google-api-python-client requests pdfkit Jinja2
+pip install Flask==2.2.2 pandas==1.5.3 matplotlib==3.7.1 xhtml2pdf==0.2.8 twilio==7.16.0 google-auth==2.16.0 google-api-python-client==2.80.0 jinja2==3.1.2 pdfkit==1.0.0 
 ```
 Obtain the credentials file(it is not available on github repository due to security concerns) and place it in the same directory as main.py. And replace the twilio credentials in main.py with your credentials:
 ```bash
