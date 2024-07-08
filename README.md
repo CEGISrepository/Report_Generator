@@ -1,5 +1,5 @@
 # Report_Generator
-Detailed master doc can be found [here]([url](https://docs.google.com/document/d/1Kwjq4ezsp3-ILCwCLQoNhiyqP1KrFNWAz7LbEJbTXGg/edit?usp=sharing)).
+Detailed master doc can be found here: https://docs.google.com/document/d/1Kwjq4ezsp3-ILCwCLQoNhiyqP1KrFNWAz7LbEJbTXGg/edit?usp=sharing
 
 ## Assumptions
 
