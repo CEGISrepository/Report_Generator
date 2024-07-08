@@ -1,4 +1,4 @@
-[# Report_Generator]([url](https://docs.google.com/document/d/1Kwjq4ezsp3-ILCwCLQoNhiyqP1KrFNWAz7LbEJbTXGg/edit?usp=sharing))
+# Report_Generator
 
 ## Assumptions
 
