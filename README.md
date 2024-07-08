@@ -1,4 +1,4 @@
-# Report_Generator
+[# Report_Generator]([url](https://docs.google.com/document/d/1Kwjq4ezsp3-ILCwCLQoNhiyqP1KrFNWAz7LbEJbTXGg/edit?usp=sharing))
 
 ## Assumptions
 
@@ -14,7 +14,10 @@
 
 ### Running the code on your local machine
 
-To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). Configure the Python interpreter on your IDE (refer to the installation guide of your corresponding IDE from the internet) . Note : We have used Python 3.11 for this project. 
+To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). We’ve used Python 3.11 for this project. Download Python 3.11 from https://www.python.org/downloads/. Download Pycharm Community Edition from https://www.jetbrains.com/pycharm/  
+
+Clone the Github repository and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository/Google Drive.
+
 Activate the environment: 
 - Linux/macOS: `source .venv/bin/activate`
 - Windows: `.venv\Scripts\activate`
@@ -23,25 +26,25 @@ Activate the environment:
 python3.11 -m venv .venv  # Create the virtual environment(if not using the .venv provided)
 source .venv/bin/activate  # Activate it (adjust for Windows if needed)
 ```
-Next, clone the Github repository onto your local system and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository. There are certain packages that need to be installed for running the code. However these will be taken care of in the .venv folder in the repository. But, as a good practice and to ensure duplicability, the packages are as follows: 
-- Flask==2.3.2
-- pandas==1.5.3
-- matplotlib==3.7.1
-- xhtml2pdf==0.2.8
-- twilio==7.16.1
-- google-api-python-client==2.72.0
-- google-auth-httplib2==0.1.0
-- google-auth-oauthlib==1.0.0
-- Jinja2==3.1.2
-- pdfkit==1.0.0
-- wkhtmltopdf==0.12.6  # Version might differ based on your OS
 
-As an example, you can install these by typing 'pip install Flask==2.3.2' or just 'pip install Flask' into your Python IDE terminal. The latter will install the latest version of any package but in some cases, might not be compatible. 
-To install it all in one go, you can enter this pre-written command into your IDE terminal: 
+If the .venv (virtual environment) file is not available, one can create their own virtual environment by typing the following command on the command prompt, followed by activating it. Proceed to install packages after activating the virtual environment as in the step below. 
 ```bash
-pip install Flask==2.2.2 pandas==1.5.3 matplotlib==3.7.1 xhtml2pdf==0.2.8 twilio==7.16.0 google-auth==2.16.0 google-api-python-client==2.80.0 jinja2==3.1.2 pdfkit==1.0.0 
+python -m venv <environment_name>
+<environment_name>\Scripts\activate
 ```
-Obtain the credentials file(it is not available on github repository due to security concerns) and place it in the same directory as main.py. And replace the twilio credentials in main.py with your credentials:
+To install all these packages in one  go type the below command on your command prompt after activating a new environment.
+```bash
+pip install flask==2.2.2 werkzeug==2.2.3 pandas numpy matplotlib scipy requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client twilio xhtml2pdf pdfkit 
+```
+This will look something like this:
+```bash
+C:\Users\cegis>python -m venv newenv
+C:\Users\cegis>newenv\Scripts\activate
+(newenv) C:\Users\cegis>pip install flask==2.2.2 werkzeug==2.2.3 pandas numpy matplotlib scipy requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client twilio xhtml2pdf pdfkit
+```
+Obtain the credentials file(it is not available on github repository due to security concerns) and place it in the same directory as main.py. 
+
+At the end, replace the twilio credentials in main.py with your credentials:
 ```bash
 account_sid = ' '
 auth_token = ' '
@@ -49,7 +52,7 @@ twilio_phone_number = '+ '
 client = Client(account_sid, auth_token)
 ```
 
-After the packages have been installed, one can run the code. The local URL will become displayed and will mostly be either http://127.0.0.1:5000 or http://127.0.0.1:8080. Open this URL to access the website portal. 
+After this, one can run the code. The local URL will become displayed and will mostly be either http://127.0.0.1:5000 or http://127.0.0.1:8080. Open this URL to access the website portal. 
 
 ### Using the website
 
