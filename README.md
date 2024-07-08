@@ -1,4 +1,5 @@
 # Report_Generator
+Detailed master doc can be found [here]([url](https://docs.google.com/document/d/1Kwjq4ezsp3-ILCwCLQoNhiyqP1KrFNWAz7LbEJbTXGg/edit?usp=sharing)).
 
 ## Assumptions
 
@@ -10,9 +11,8 @@
 - The user has checked and is aware of what data types(numeric or categorical) must go into corresponding charts (bar, pie, scatter, line).
 
 
-## Steps for usage
 
-### Running the code on your local machine
+## Running the code on your local machine
 
 To run the code on your local machine, one is required to install Python onto their computer and an IDE for the same (I used Pycharm-Community Edition). We’ve used Python 3.11 for this project. Download Python 3.11 from https://www.python.org/downloads/. Download Pycharm Community Edition from https://www.jetbrains.com/pycharm/  
 
@@ -54,7 +54,7 @@ client = Client(account_sid, auth_token)
 
 After this, one can run the code. The local URL will become displayed and will mostly be either http://127.0.0.1:5000 or http://127.0.0.1:8080. Open this URL to access the website portal. 
 
-### Using the website
+## Using the website
 
 Once the website has been loaded, one will encounter the instructions page which will include the instructions to use the website. These are as follows:
 - Upload data and wait for few seconds for the data file to be uploaded and the first chart to appear.
