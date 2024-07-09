@@ -18,21 +18,12 @@ To run the code on your local machine, one is required to install Python onto th
 
 Clone the Github repository and open the main.py code in your IDE. Make sure the directory hierarchies remain the same as in the Github repository/Google Drive.
 
-Activate the environment: 
-- Linux/macOS: `source .venv/bin/activate`
-- Windows: `.venv\Scripts\activate`
-
-```bash
-python3.11 -m venv .venv  # Create the virtual environment(if not using the .venv provided)
-source .venv/bin/activate  # Activate it (adjust for Windows if needed)
-```
-
-If the .venv (virtual environment) file is not available, one can create their own virtual environment by typing the following command on the command prompt, followed by activating it. Proceed to install packages after activating the virtual environment as in the step below. 
+Create your own virtual environment by typing the following command on the command prompt, followed by activating it. Proceed to install packages after activating the virtual environment as in the step below.
 ```bash
 python -m venv <environment_name>
 <environment_name>\Scripts\activate
 ```
-To install all these packages in one  go type the below command on your command prompt after activating a new environment.
+Next, install all these packages by typing the below command on your command prompt after activating a new environment.
 ```bash
 pip install flask==2.2.2 werkzeug==2.2.3 pandas numpy matplotlib scipy requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client twilio xhtml2pdf pdfkit 
 ```
@@ -42,6 +33,15 @@ C:\Users\cegis>python -m venv newenv
 C:\Users\cegis>newenv\Scripts\activate
 (newenv) C:\Users\cegis>pip install flask==2.2.2 werkzeug==2.2.3 pandas numpy matplotlib scipy requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client twilio xhtml2pdf pdfkit
 ```
+After installing the packages, we need to configure this virtual environment on our IDE. 
+- For Pycharm, click at the top left corner of the screen at the settings icon. 
+- Now navigate to Project: main.py tab and click on Python Interpreter.
+- Click on Add Interpreter -> Add Local Interpreter
+- Select Existing in front of Environment. 
+- Now browse to your new environment file folder, usually in the same directory where your command was run on command prompt.
+- Inside the <new environment folder>, click on Scripts and locate to python.exe and select it. 
+- Your virtual environment is configured. 
+
 Obtain the credentials file(it is not available on github repository due to security concerns) and place it in the same directory as main.py. 
 
 At the end, replace the twilio credentials in main.py with your credentials:
